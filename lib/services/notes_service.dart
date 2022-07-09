@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:premaco_restapi/models/api_response.dart';
 import 'package:premaco_restapi/models/note.dart';
+import 'package:premaco_restapi/models/noteInsert.dart';
 import 'package:premaco_restapi/models/note_for_listing.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,6 +10,7 @@ class NotesService {
   static const API = 'https://tq-notes-api-jkrgrdggbq-el.a.run.app';
   static const headers = {
     'apiKey': 'abaf3c8e-72c0-498b-9862-47afad7add14',
+    'Content-Type': 'application/json'
   };
   Future<APIResponse<List<NotesForListing>>> getNotesList() {
     return http.get(Uri.parse(API + '/notes'), headers: headers).then((data) {
@@ -43,5 +45,21 @@ class NotesService {
       return APIResponse<Note>(error: true, errorMessage: "An error occured");
     }).catchError((_) =>
             APIResponse<Note>(error: true, errorMessage: "An error occured"));
+  }
+
+  //create note
+  Future<APIResponse<bool>> createNote(NoteInsert item) {
+    return http
+        .post(Uri.parse(API + '/notes'),
+            headers: headers, body: json.encode(item.toJson()))
+        .then((data) {
+      if (data.statusCode == 201) {
+        return APIResponse<bool>(
+          data: true,
+        );
+      }
+      return APIResponse<bool>(error: true, errorMessage: "An error occured");
+    }).catchError((_) =>
+            APIResponse<bool>(error: true, errorMessage: "An error occured"));
   }
 }
