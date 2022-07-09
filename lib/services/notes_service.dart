@@ -15,7 +15,7 @@ class NotesService {
   Future<APIResponse<List<NotesForListing>>> getNotesList() {
     return http.get(Uri.parse(API + '/notes'), headers: headers).then((data) {
       if (data.statusCode == 200) {
-        final jsonData = jsonDecode(data.body);
+        final jsonData = jsonDecode(data.body); //
         final notes = <NotesForListing>[];
         for (var item in jsonData) {
           notes.add(NotesForListing.fromJson(item));
