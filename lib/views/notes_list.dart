@@ -1,6 +1,8 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:premaco_restapi/models/api_response.dart';
 import 'package:premaco_restapi/models/note_for_listing.dart';
@@ -79,7 +81,33 @@ class _NoteListState extends State<NoteList> {
                   confirmDismiss: (direction) async {
                     final result = await showDialog(
                         context: context, builder: (_) => NoteDelete());
-                    print(result);
+                    if (result) {
+                      var message;
+                      final deleteResult = await service
+                          .deleteNote(_apiResponse.data![index].noteID ?? '');
+                      if (deleteResult != null && deleteResult.data == true) {
+                        message = 'The note was deleted successfully';
+                      } else {
+                        message =
+                            deleteResult.errorMessage ?? 'An error occured';
+                      }
+                      // ignore: deprecated_member_use
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                                title: Text('Done'),
+                                content: Text(message),
+                                actions: <Widget>[
+                                  TextButton(
+                                      child: Text('Ok'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      })
+                                ],
+                              ));
+                      return deleteResult.data ?? false;
+                    }
+
                     return result;
                   },
                   background: Container(
