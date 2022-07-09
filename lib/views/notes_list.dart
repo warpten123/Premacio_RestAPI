@@ -34,7 +34,7 @@ class _NoteListState extends State<NoteList> {
       _isLoading = true;
     });
 
-    _apiResponse = await service.getNoteList();
+    _apiResponse = await service.getNotesList();
 
     setState(() {
       _isLoading = false;
@@ -96,6 +96,7 @@ class _NoteListState extends State<NoteList> {
                           builder: (_) => NoteModify(
                                 noteID: _apiResponse.data![index].noteID,
                               )));
+                      print(_apiResponse.data![index].noteID);
                     },
                     title: Text(
                       _apiResponse.data![index].noteTitle,
